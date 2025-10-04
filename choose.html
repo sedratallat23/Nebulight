@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NEBULIGHT — Choose Your Astronaut</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Fredoka One', cursive;
+    background: linear-gradient(135deg, #1a1a40, #3a2a72);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    color: #ffcc70;
+    text-shadow: 0 0 10px #ffcc70;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 3rem;
+  }
+
+  a.button {
+    background: linear-gradient(135deg, #ff6f91, #ffcc70);
+    color: #2a2a72;
+    font-weight: 700;
+    font-size: 1.8rem;
+    padding: 1rem 3rem;
+    border-radius: 40px;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(255, 111, 145, 0.7);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: inline-block;
+  }
+
+  a.button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(255, 111, 145, 0.9);
+  }
+</style>
+</head>
+<body>
+  <h1>Are you a boy astronaut or a girl astronaut?</h1>
+  <div class="buttons">
+    <a href="game-boy.html" class="button" aria-label="Boy Astronaut">Boy</a>
+    <a href="game-girl.html" class="button" aria-label="Girl Astronaut">Girl</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NEBULIGHT — Read, learn, and play!</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Baloo+2&display=swap');
+
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Baloo 2', cursive;
+    background: url('space1.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #cc5656;
+    overflow: hidden;
+    position: relative; /* For overlay and particles */
+  }
+
+  /* Enhanced dark overlay for better readability */
+  .overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10, 10, 20, 0.5); /* Semi-transparent dark blue-black overlay */
+    z-index: 1;
+  }
+
+  .container {
+    position: relative;
+    z-index: 2;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    animation: fadeIn 2s ease-out; /* Subtle entrance animation for container */
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 4.5rem; /* Increased from 3.5rem to make NEBULIGHT larger */
+    margin-bottom: 1rem;
+    margin-top: -2rem; /* Moves title slightly above center */
+    color: #d77edf; /* Changed to a bright yellow-gold color, different from slogan's reddish tone */
+    text-shadow: 0 0 20px rgba(215, 126, 223, 0.8); /* Added glow effect */
+    animation: glowPulse 2s ease-in-out infinite alternate; /* Pulsing glow */
+  }
+
+  @keyframes glowPulse {
+    from { text-shadow: 0 0 20px rgba(215, 126, 223, 0.8); }
+    to { text-shadow: 0 0 30px rgba(215, 126, 223, 1); }
+  }
+
+  h2 {
+    margin-top: -1rem; /* Moves subtitle slightly above to align with title */
+    color: #e8e9ad; /* Explicitly set to match body color (reddish) for contrast with h1 */
+    font-size: 2.2rem;
+    animation: slideInUp 1.5s ease-out 0.5s both; /* Slide-in animation */
+  }
+
+  @keyframes slideInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  h3 {
+    margin-top: -1rem; /* Moves subtitle slightly above to align with title */
+    color: #e4e7e9; /* Explicitly set to match body color (reddish) for contrast with h1 */
+    font-size: 1.4rem;
+    max-width: 600px;
+    line-height: 1.5;
+    animation: slideInUp 1.5s ease-out 1s both; /* Delayed slide-in */
+  }
+
+  .buttons {
+    margin-top: 1rem; /* Reduced from 2rem to move buttons slightly above */
+    display: flex;
+    gap: 2rem;
+    animation: slideInUp 1.5s ease-out 1.5s both; /* Delayed slide-in for buttons */
+  }
+
+  @media (max-width: 768px) {
+    .buttons {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+
+  a.button {
+    background: linear-gradient(135deg, #ff6f91, #f0efee);
+    color: #2a2a72;
+    font-weight: 700;
+    font-size: 1.5rem;
+    padding: 1rem 3rem;
+    border-radius: 30px;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(255, 111, 145, 0.6);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: inline-block;
+    position: relative;
+    overflow: hidden; /* For shine effect */
+  }
+
+  a.button::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+  }
+
+  a.button:hover::before {
+    left: 100%; /* Shine effect on hover */
+  }
+
+  a.button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(255, 111, 145, 0.9);
+  }
+
+  /* Enhanced floating stars with more particles */
+  .star {
+    position: absolute;
+    background: radial-gradient(circle, #fff 60%, transparent 70%);
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: twinkle 3s infinite alternate, float 6s ease-in-out infinite;
+    z-index: 0; /* Behind container */
+  }
+
+  @keyframes twinkle {
+    0% {opacity: 0.3;}
+    100% {opacity: 1;}
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(180deg); }
+  }
+
+  .star1 { width: 6px; height: 6px; top: 15%; left: 20%; animation-delay: 0s; }
+  .star2 { width: 4px; height: 4px; top: 40%; left: 70%; animation-delay: 1s; }
+  .star3 { width: 5px; height: 5px; top: 75%; left: 50%; animation-delay: 2s; }
+  .star4 { width: 3px; height: 3px; top: 30%; left: 85%; animation-delay: 1.5s; }
+  .star5 { width: 7px; height: 7px; top: 60%; left: 10%; animation-delay: 0.5s; }
+  /* Added more stars for fuller effect */
+  .star6 { width: 4px; height: 4px; top: 20%; left: 60%; animation-delay: 2.5s; }
+  .star7 { width: 5px; height: 5px; top: 50%; left: 15%; animation-delay: 0.8s; }
+  .star8 { width: 6px; height: 6px; top: 80%; left: 80%; animation-delay: 1.2s; }
+
+  /* Subtle particle drift for space feel */
+  .particle {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    animation: drift 10s linear infinite;
+    z-index: 0;
+  }
+
+  @keyframes drift {
+    0% { transform: translateX(0) translateY(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateX(100vw) translateY(100vh); opacity: 0; }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    h1 { font-size: 3rem; }
+    h2 { font-size: 1.8rem; }
+    h3 { font-size: 1.2rem; }
+    a.button { font-size: 1.3rem; padding: 0.8rem 2rem; }
+  }
+</style>
+</head>
+<body>
+  <div class="overlay"></div>
+  <div class="container">
+    <h1>NEBULIGHT</h1>
+    <h2>Read, learn, and play!</h2>
+    <h3>Read the stories, solve the quizzes,  unlock the games!  </h3>
+    <div class="buttons">
+      <a href="read.html" class="button" aria-label="Book 1">Book 1</a>
+      <a href="read2.html" class="button" aria-label="Book 2">Book 2</a>
+    </div>
+  </div>
+
+  <!-- Enhanced floating stars -->
+  <div class="star star1"></div>
+  <div class="star star2"></div>
+  <div class="star star3"></div>
+  <div class="star star4"></div>
+  <div class="star star5"></div>
+  <div class="star star6"></div>
+  <div class="star star7"></div>
+  <div class="star star8"></div>
+
+  <!-- Floating particles for depth -->
+  <div class="particle" style="top: 10%; left: 5%; animation-delay: 0s; animation-duration: 15s;"></div>
+  <div class="particle" style="top: 30%; left: 80%; animation-delay: 3s; animation-duration: 12s;"></div>
+  <div class="particle" style="top: 70%; left: 20%; animation-delay: 6s; animation-duration: 18s;"></div>
+  <div class="particle" style="top: 50%; left: 90%; animation-delay: 9s; animation-duration: 14s;"></div>
+</body>
+</html>

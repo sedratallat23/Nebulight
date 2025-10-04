@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NEBULIGHT — Quiz</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Baloo 2', cursive;
+    /* Background image: Cosmic Aurora theme */
+    background-image: url('Galaxy.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Keeps image fixed on scroll */
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    position: relative; /* For overlay positioning */
+    overflow-x: hidden; /* Prevent horizontal scroll on mobile */
+  }
+
+  /* Dark overlay for readability over the background image */
+  body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(42, 26, 64, 0.7); /* Semi-transparent dark purple overlay */
+    z-index: -1; /* Behind all content */
+  }
+
+  h1 {
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+    color: #ffcc70;
+    text-shadow: 0 0 10px #ffcc70;
+    position: relative; /* Ensures it's above overlay */
+    z-index: 1;
+    animation: glowPulse 2s ease-in-out infinite alternate; /* Pulsing glow for cosmic feel */
+  }
+
+  @keyframes glowPulse {
+    from { text-shadow: 0 0 10px #ffcc70; }
+    to { text-shadow: 0 0 20px #ffcc70, 0 0 30px #ffcc70; }
+  }
+
+  form {
+    background: rgba(50, 30, 90, 0.9); /* Kept semi-transparent to blend with overlay */
+    border-radius: 20px;
+    max-width: 600px;
+    padding: 2rem;
+    box-shadow: 0 0 20px #ffcc70;
+    position: relative; /* Above overlay */
+    z-index: 1;
+    animation: fadeInSlide 1.5s ease-out 0.5s both; /* Entrance animation */
+  }
+
+  @keyframes fadeInSlide {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-section {
+    display: none; /* Hide all sections initially */
+    animation: fadeIn 0.5s ease-in; /* Smooth transition when showing */
+  }
+
+  .question-section.active {
+    display: block; /* Show active section */
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .question {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: color 0.3s ease; /* Subtle color shift on focus */
+  }
+
+  label {
+    display: block;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: transform 0.2s ease; /* Hover lift */
+  }
+
+  label:hover {
+    transform: translateX(5px); /* Slight slide on hover for interactivity */
+  }
+
+  input[type="radio"] {
+    margin-right: 0.8rem;
+    cursor: pointer;
+    transform: scale(1.2); /* Slightly larger for touch-friendliness */
+  }
+
+  input[type="radio"]:checked + span {
+    color: #ffcc70; /* Highlight selected text */
+  }
+
+  .btn-submit {
+    background: #ff6f91;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.4rem;
+    padding: 0.8rem 2.5rem;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(255, 111, 145, 0.7);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden; /* For shine effect */
+  }
+
+  .btn-submit::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+  }
+
+  .btn-submit:hover::before {
+    left: 100%; /* Shine sweep on hover */
+  }
+
+  .btn-submit:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(255, 111, 145, 0.9);
+  }
+
+  .message {
+    margin-top: 1rem;
+    font-size: 1.3rem;
+    color: #ff6f91;
+    font-weight: 700;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease; /* Animate message appearance */
+  }
+
+  .message.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .message.success {
+    color: #90EE90; /* Green for success */
+  }
+
+  .progress {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: #ffcc70;
+    font-weight: bold;
+    position: relative;
+  }
+
+  .progress::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: #ffcc70;
+    transition: width 0.5s ease; /* Progress bar underline animation */
+    border-radius: 1px;
+  }
+
+  .progress.animated::after {
+    width: 100%; /* Animate on question change */
+  }
+
+  /* Cosmic particles (twinkling stars) for background enhancement */
+  .star {
+    position: absolute;
+    background: radial-gradient(circle, #fff 60%, transparent 70%);
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: twinkle 3s infinite alternate, float 6s ease-in-out infinite;
+    z-index: 0; /* Behind form */
+    pointer-events: none;
+  }
+
+  @keyframes twinkle {
+    0% { opacity: 0.3; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .star1 { width: 4px; height: 4px; top: 20%; left: 10%; animation-delay: 0s; }
+  .star2 { width: 3px; height: 3px; top: 60%; right: 15%; animation-delay: 1.5s; }
+  .star3 { width: 5px; height: 5px; top: 80%; left: 70%; animation-delay: 2.5s; }
+
+  /* Responsive enhancements */
+  @media (max-width: 768px) {
+    h1 { font-size: 2.2rem; }
+    form { padding: 1.5rem; margin: 1rem; }
+    .question { font-size: 1.3rem; }
+    label { font-size: 1.1rem; }
+    .btn-submit { font-size: 1.2rem; padding: 0.7rem 2rem; }
+    .star { display: none; } /* Hide stars on small screens for performance */
+  }
+</style>
+</head>
+<body>
+  <h1>Quiz Time!</h1>
+  <form id="quizForm" onsubmit="return false;">
+    <div class="progress" id="progress">Question 1 of 3</div>
+
+    <!-- Question 1 -->
+    <div class="question-section active" id="q1">
+      <div class="question">What was Jack's role during the mission?</div>
+      <label><input type="radio" name="answer1" value="Controlling the spacecraft" /> Controlling the spacecraft</label>
+      <label><input type="radio" name="answer1" value="Monitoring the instruments" /> Monitoring the instruments</label>
+      <label><input type="radio" name="answer1" value="Communicating with Earth" /> Communicating with Earth</label>
+      <label><input type="radio" name="answer1" value="Starting the countdown" /> Starting the countdown</label>
+      <button type="submit" class="btn-submit">Submit</button>
+      <div class="message" id="message1"></div>
+    </div>
+
+    <!-- Question 2 -->
+    <div class="question-section" id="q2">
+      <div class="progress" id="progress2"></div>
+      <div class="question">Why did the astronauts go to the shelter room?</div>
+      <label><input type="radio" name="answer2" value="To escape from space pirates" /> To escape from space pirates</label>
+      <label><input type="radio" name="answer2" value="To avoid crashing into an asteroid" />To avoid crashing into an asteroid</label>
+      <label><input type="radio" name="answer2" value="To protect themselves from a solar storm" /> To protect themselves from a solar storm</label>
+      <label><input type="radio" name="answer2" value=" To eat their space food" /> To eat their space food</label>
+      <button type="submit" class="btn-submit">Submit</button>
+      <div class="message" id="message2"></div>
+    </div>
+
+    <!-- Question 3 -->
+    <div class="question-section" id="q3">
+      <div class="progress" id="progress3"></div>
+      <div class="question">What was the Astronaut Mark most worried about in space?</div>
+      <label><input type="radio" name="answer3" value="Missing his family" /> Missing his family</label>
+      <label><input type="radio" name="answer3" value="Living without pizza" /> Living without pizza</label>
+      <label><input type="radio" name="answer3" value="Forgetting his spacesuit" /> Forgetting his spacesuit</label>
+      <label><input type="radio" name="answer3" value="Fixing the spacecraft" /> Fixing the spacecraft</label>
+      <button type="submit" class="btn-submit">Submit</button>
+      <div class="message" id="message3"></div>
+    </div>
+  </form>
+
+  <!-- Twinkling stars for cosmic atmosphere -->
+  <div class="star star1"></div>
+  <div class="star star2"></div>
+  <div class="star star3"></div>
+
+  <script>
+    let currentQuestion = 1;
+    const totalQuestions = 3;
+    const correctAnswers = {
+      1: 'Monitoring the instruments',
+      2: 'To protect themselves from a solar storm',
+      3: 'Living without pizza'
+    };
+
+    function showQuestion(qNum) {
+      // Hide all sections
+      for (let i = 1; i <= totalQuestions; i++) {
+        document.getElementById(`q${i}`).classList.remove('active');
+      }
+      // Show current
+      document.getElementById(`q${currentQuestion}`).classList.add('active');
+      // Update progress
+      const progressEl = document.getElementById('progress');
+      progressEl.textContent = `Question ${qNum} of ${totalQuestions}`;
+      progressEl.classList.add('animated'); // Trigger underline animation
+      setTimeout(() => progressEl.classList.remove('animated'), 500); // Reset after animation
+    }
+
+    function handleSubmit(event, qNum) {
+      event.preventDefault();
+
+      const selectedAnswer = document.querySelector(`input[name="answer${qNum}"]:checked`);
+      const message = document.getElementById(`message${qNum}`);
+      
+      if (!selectedAnswer) {
+        message.textContent = 'Please select an answer!';
+        message.className = 'message';
+        message.classList.add('show');
+        return;
+      }
+
+      if (selectedAnswer.value === correctAnswers[qNum]) {
+        message.textContent = 'Great job! You got it right. Moving to next...';
+        message.className = 'message success';
+        message.classList.add('show');
+        
+        // Clear selection
+        selectedAnswer.checked = false;
+        
+        // If last question, redirect after delay
+        if (qNum === totalQuestions) {
+          setTimeout(() => {
+            window.location.href = 'choose.html';
+          }, 1500);
+          return;
+        }
+        
+        // Move to next question after delay
+        setTimeout(() => {
+          currentQuestion++;
+          showQuestion(currentQuestion);
+          message.classList.remove('show'); // Hide message
+          message.textContent = ''; // Clear message
+        }, 1500);
+      } else {
+        message.textContent = 'Try again!';
+        message.className = 'message';
+        message.classList.add('show');
+        // Clear the selection for another try
+        selectedAnswer.checked = false;
+      }
+    }
+
+    // Attach event listeners to each submit button
+    document.querySelectorAll('.btn-submit').forEach((btn, index) => {
+      const qNum = index + 1;
+      btn.addEventListener('click', (event) => handleSubmit(event, qNum));
+    });
+
+    // Initialize: Show first question
+    showQuestion(1);
+  </script>
+</body>
+</html>

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NEBULIGHT — Book 1</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+
+  body {
+   margin: 0; padding: 0;
+    font-family: 'Baloo 2', cursive;
+    background-image: url('Galaxy.jpeg');
+    color: #f0e6ff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    position: relative; /* For overlay positioning */
+  }
+  /* Dark overlay for readability over the background image */
+  body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(10, 10, 10, 0.6); /* Semi-transparent dark overlay */
+    z-index: -1; /* Behind all content */
+  }
+
+    header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative; /* For z-index and animations */
+    z-index: 1;
+    animation: fadeInSlide 1.5s ease-out; /* Entrance animation for header */
+  }
+
+  header h1 {
+    font-size: 4.6rem; /* Increased from 3rem for larger title */
+    color: #f3f0f5;
+    text-shadow: 0 0 10px #111111;
+    animation: glowPulse 2s ease-in-out infinite alternate; /* Pulsing glow for cosmic feel */
+  }
+@keyframes glowPulse {
+    from { text-shadow: 0 0 10px #111111; }
+    to { text-shadow: 0 0 20px #f3f0f5, 0 0 30px #f3f0f5; }
+  }
+
+  header p {
+    font-size: 1.6rem; /* Increased from 1.2rem for larger slogan */
+    color: #f3f0f5;
+    animation: fadeIn 1s ease-out 0.5s both; /* Delayed fade-in */
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Book Container */
+  .book-container {
+    perspective: 1500px;
+    width: 80%;
+    max-width: 800px;
+    height: 500px;
+    position: relative;
+    margin: 0 auto 2rem;
+    z-index: 1; /* Ensure above background effects */
+  }
+
+  .book {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s ease;
+  }
+
+  .page {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    overflow: hidden;
+    backface-visibility: hidden;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .page-left {
+    left: 0;
+    transform-origin: right center;
+    border-left: 3px solid #0f0f0f;
+  }
+
+  .page-right {
+    right: 0;
+    transform-origin: left center;
+    border-right: 3px solid #0c0c0c;
+  }
+
+  .page-content {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #080808;
+    text-shadow: 1px 1px 3px rgba(27, 26, 26, 0.8);
+    font-size: 1.1rem;
+  }
+
+  .page-image {
+    width: 70%;
+    max-width: 300px;
+    height: 70%;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+
+  /* Flip Animation */
+  .flipping-right {
+    animation: flipRight 0.8s ease forwards;
+    z-index: 10;
+  }
+
+  .flipping-left {
+    animation: flipLeft 0.8s ease forwards;
+    z-index: 10;
+  }
+
+  @keyframes flipRight {
+    0% {
+      transform: rotateY(0deg);
+    }
+    100% {
+      transform: rotateY(-180deg);
+      box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+    }
+  }
+
+  @keyframes flipLeft {
+    0% {
+      transform: rotateY(-180deg);
+    }
+    100% {
+      transform: rotateY(0deg);
+      box-shadow: 5px 0 20px rgba(0,0,0,0.5);
+    }
+  }
+
+  /* Cover Pages - Now with background images */
+  .cover {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #fff;
+    font-size: 2rem;
+  }
+
+  .cover .page-content {
+    justify-content: center;
+    position: relative; /* For overlay positioning */
+  }
+
+  /* Overlay for text readability on cover images */
+  .cover .page-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(26, 25, 25, 0.4); /* Semi-transparent dark overlay */
+    border-radius: 5px;
+    z-index: -1;
+  }
+
+
+  .cover h2 {
+  position: relative; /* Ensure text is above overlay (from original) */
+  z-index: 1;
+  text-align: center;
+  color: #fcf8f8; /* Fallback color if gradient fails */
+  font-size: 5rem;
+  font-weight: bold; /* Bold for emphasis */
+  letter-spacing: 2px; /* Slight spacing for elegance */
+  background: linear-gradient(45deg, #f7f5f3, #f7f7f7, #ffffff); /* Multi-color gradient for cosmic aurora vibe */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text; /* Applies gradient to text */
+  text-shadow: 0 0 20px rgba(255, 204, 112, 0.8); /* Base enhanced glow */
+  animation: titleGlow 3s ease-in-out infinite alternate; /* Pulsing animation for interactivity */
+}
+
+@keyframes titleGlow {
+  0% { 
+    transform: scale(1); 
+    text-shadow: 0 0 10px rgba(255, 204, 112, 0.5); /* Subtle start */
+  }
+  100% { 
+    transform: scale(1.05); /* Gentle scale for breathing effect */
+    text-shadow: 0 0 30px rgba(255, 204, 112, 1), 0 0 40px rgba(215, 126, 223, 0.8); /* Intense multi-layer glow */
+  }
+}
+  
+
+.cover p {
+    position: relative; /* Ensure text is above overlay */
+    z-index: 1;
+    text-align: center;
+    color: #f7f5f3; /* <-- Added missing semicolon */
+    font-size: 1.5rem; /* Enhanced shadow for visibility */
+}
+  /* Specific background images for covers */
+  [data-page="1"] {
+    background-image: url('mission.jpeg'); /* Aurora borealis for front cover */
+  }
+
+  [data-page="10"] {
+    background-image: url('astro.jpeg'); /* Another aurora/starry sky for back cover */
+  }
+
+  /* Hidden Pages */
+  .hidden {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  /* Quiz Button */
+  .btn-quiz {
+    display: inline-block;
+    background: #ff6f91;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.4rem;
+    padding: 0.8rem 2.5rem;
+    border-radius: 30px;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(255, 111, 145, 0.7);
+    transition: transform 0.3s ease;
+    margin-top: 1rem;
+  }
+
+  .btn-quiz:hover {
+    transform: scale(1.1);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .book-container {
+      height: 400px;
+    }
+    .page {
+      width: 45%;
+    }
+    .page-image {
+      width: 90%;
+      height: 50%;
+    }
+    header h1 {
+      font-size: 3rem; /* Responsive scaling */
+    }
+    header p {
+      font-size: 1.3rem; /* Responsive scaling */
+    }
+    .cover {
+      font-size: 1.5rem; /* Smaller text on mobile covers */
+    }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Jack's First Mission</h1>
+    <p>Flip through the cosmic photos!</p>
+  </header>
+
+  <div class="book-container">
+    <div class="book" id="book">
+      <!-- Page 1: Front Cover (Left) - Photo with text overlay -->
+      <div class="page page-left cover" data-page="1">
+        <div class="page-content">
+          <h2>Jack's First Mission</h2>
+          <p> By Nebulight.</p>
+        </div>
+      </div>
+
+      <!-- Page 2: Right Side of Spread 1 -->
+      <div class="page page-right" data-page="2">
+        <div class="page-content">
+          <img src="astronaut.jpeg" alt="Starry Galaxy" class="page-image">
+        
+          <p>   Today was one of my dream days. I, Jack, was finally an astronaut, and this was my very first journey into space with my crew. “Hey guys, are you ready for today?” I asked.</p>
+        </div>
+      </div>
+
+      <!-- Page 3: Left Side of Spread 2 -->
+      <div class="page page-left" data-page="3">
+        <div class="page-content">
+          <img src="pizza.jpeg" alt="Colorful Planet" class="page-image">
+          <p> Astronaut Mark sighed, “No… I’m sad. How will I live without pizza?”
+
+Astronaut Elvin laughed, “You don’t want to die because of a piece of pizza in space!” </p>
+  </div>
+      </div>
+
+        <!-- Page 4: Left Side of Spread 2 -->
+      <div class="page page-right" data-page="4">
+        <div class="page-content">
+          
+          <p> Captain Kelvin spoke firmly, “Come on, get ready. Put on your spacesuits—we’ll board the spacecraft soon.”
+
+Inside the spacecraft, Commander Chris started the countdown: 5... 4... 3... 2... 1... 0!
+The rocket launched. </p>
+<img src="rocket2.jpeg" alt="Colorful Planet" class="page-image">
+  </div>
+      </div>
+
+      <!-- Page 5: Left Side of Spread 3 -->
+      <div class="page page-left" data-page="5">
+        <div class="page-content">
+          <img src="solar.jpg" alt="Rocket Launch" class="page-image">
+          <p> I was in charge of monitoring the instruments. Captain Kelvin and Elvin were controlling the spacecraft, while Mark was responsible for communication with Earth.
+
+I stared in wonder at the Earth—it looked so small from up here. Suddenly, I noticed an unusual bright flash from the Sun.   </p>
+        </div>
+      </div>
+
+      <!-- Page 6: Right Side of Spread 3 -->
+      <div class="page page-right" data-page="6">
+        <div class="page-content">
+          <p> My thoughts were cut short by Mark’s urgent voice.
+
+“There’s a message from Earth,” he said. “Warning: a solar storm is approaching!”
+
+I asked nervously, “What will happen?”
+
+Mark explained, “During a solar storm, the Sun releases dangerous rays of light that travel at incredible speed—they can reach Earth in just 8 minutes.”
+
+Elvin added, “Not only that, the Sun also throws out fiery plasma clouds during storms.”</p>
+           <img src="sun.jpeg" alt="Alien Planet" class="page-image">
+                 </div>
+      </div>
+
+      <!-- Page 7: Left Side of Spread 4 -->
+      <div class="page page-left" data-page="7">
+        <div class="page-content">
+          <img src="astro2.jpeg" alt="Milky Way" class="page-image">
+
+          <p> Captain Kelvin commanded, “We must go to the shelter room. It’s specially designed to protect us from the storm.”
+
+I shouted, “Then let’s go, everyone!”
+
+We stayed in the shelter until the storm ended. When it was finally safe, we left the room, completed our mission, and prepared to return.
+</p>
+        </div>
+      </div>
+
+      <!-- Page 8: Right Side of Spread 4 -->
+      <div class="page page-right" data-page="8">
+        <div class="page-content">
+
+<p> We stayed in the shelter until the storm ended.
+
+When we came out, a few systems were still blinking with warnings, but Captain Kelvin and Elvin quickly fixed them. Soon, everything was back to normal.
+</p>
+          <img src="system.jpeg" alt="Space Station" class="page-image">
+        </div>
+      </div>
+
+      <!-- Page 9: Left Side of Spread 5 -->
+      <div class="page page-left" data-page="9">
+        <div class="page-content">
+
+          <p>The spacecraft landed safely back on Earth. As soon as we got out, Mark ran and shouted, “Pizza! Pizza!” He was truly addicted.
+
+The rest of us laughed as we began telling the story of our mission—especially how we survived the solar storm.</p>
+           <img src="pizza2.jpeg" alt="Comet Trail" class="page-image">
+                 </div>
+      </div>
+
+      <!-- Page 10: Back Cover (Left, hidden initially) - Photo with text overlay -->
+      <div class="page page-right cover hidden" data-page="10">
+        <div class="page-content">
+          <h2>The End</h2>
+          <p>Thanks for exploring the cosmos!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a href="quiz2.html" class="btn-quiz" aria-label="Take the Quiz">Take the Quiz</a>
+
+  <script>
+    // JavaScript for realistic page flipping
+    const book = document.getElementById('book');
+    const pages = book.querySelectorAll('.page');
+    let currentPage = 1; // Start at page 1 (cover)
+    const totalPages = pages.length;
+    let isFlipping = false; // Prevent multiple flips
+
+    // Function to update visible pages based on current spread
+    function updatePages() {
+      pages.forEach((page, index) => {
+        const pageNum = parseInt(page.dataset.page);
+        if (pageNum === currentPage) {
+          page.classList.remove('hidden');
+          page.style.zIndex = 5;
+        } else if (pageNum === currentPage + 1 && currentPage + 1 <= totalPages) {
+          page.classList.remove('hidden');
+          page.style.zIndex = 5;
+        } else {
+          page.classList.add('hidden');
+          page.style.zIndex = 1;
+        }
+      });
+    }
+
+    // Flip to next page (right click)
+    function flipRight() {
+      if (currentPage >= totalPages || isFlipping) return;
+      
+      isFlipping = true;
+      const rightPage = book.querySelector(`[data-page="${currentPage + 1}"]`);
+      if (rightPage && currentPage + 1 <= totalPages) {
+        rightPage.classList.add('flipping-right');
+        setTimeout(() => {
+          currentPage += 2; // Advance by spread (2 pages)
+          if (currentPage > totalPages) currentPage = totalPages; // Clamp to last page if needed
+          rightPage.classList.remove('flipping-right');
+          updatePages();
+          isFlipping = false;
+        }, 800);
+      } else if (currentPage + 1 > totalPages && currentPage % 2 === 1) {
+        // Handle odd total: from page 11 (left) to 13 (back, but since no 12 right, advance to 13)
+        setTimeout(() => {
+          currentPage += 2;
+          if (currentPage > totalPages) currentPage = totalPages;
+          updatePages();
+          isFlipping = false;
+        }, 800);
+      } else {
+        isFlipping = false;
+      }
+    }
+
+    // Flip to previous page (left click)
+    function flipLeft() {
+      if (currentPage <= 1 || isFlipping) return;
+      
+      isFlipping = true;
+      const leftPage = book.querySelector(`[data-page="${currentPage - 1}"]`);
+      if (leftPage) {
+        leftPage.classList.add('flipping-left');
+        setTimeout(() => {
+          currentPage -= 2; // Go back by spread
+          if (currentPage < 1) currentPage = 1; // Clamp to first page
+          leftPage.classList.remove('flipping-left');
+          updatePages();
+          isFlipping = false;
+        }, 800);
+      } else {
+        isFlipping = false;
+      }
+    }
+
+    // Event listeners for clicking on pages
+    book.addEventListener('click', (e) => {
+      const rect = book.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const bookWidth = rect.width;
+
+      if (clickX < bookWidth / 2) {
+        // Left half: flip back
+        flipLeft();
+      } else {
+        // Right half: flip forward
+        flipRight();
+      }
+    });
+
+    // Initialize
+    updatePages();
+
+    // Optional: Keyboard support for demo (arrow keys)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') flipRight();
+      if (e.key === 'ArrowLeft') flipLeft();
+    });
+  </script>
+</body>
+</html> 

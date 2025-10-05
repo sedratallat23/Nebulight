@@ -8,17 +8,24 @@
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
 
   body {
-   margin: 0; padding: 0;
+    margin: 0; padding: 0;
     font-family: 'Baloo 2', cursive;
-    background-image: url('Galaxy.jpeg');
-    color: #f0e6ff;
+    /* Background image: Cosmic Aurora theme */
+    background-image: url('space1.jpg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Keeps image fixed on scroll */
+    color: #fff;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 2rem 1rem;
     position: relative; /* For overlay positioning */
+    overflow-x: hidden; /* Prevent horizontal scroll on mobile */
   }
+
   /* Dark overlay for readability over the background image */
   body::before {
     content: '';
@@ -182,7 +189,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(26, 25, 25, 0.4); /* Semi-transparent dark overlay */
+    background: rgba(255, 255, 255, 0); /* Semi-transparent dark overlay */
     border-radius: 5px;
     z-index: -1;
   }
@@ -225,7 +232,7 @@
 }
   /* Specific background images for covers */
   [data-page="1"] {
-    background-image: url('Art Echoes (@motionartsss) on Threads.jpeg'); /* Aurora borealis for front cover */
+    background-image: url('White and Green Modern Book Cover A4_1.jpg'); /* Aurora borealis for front cover */
   }
 
   [data-page="10"] {
@@ -292,8 +299,6 @@
       <!-- Page 1: Front Cover (Left) - Photo with text overlay -->
       <div class="page page-left cover" data-page="1">
         <div class="page-content">
-          <h2>Aurora</h2>
-          <p> By Nebulight.</p>
         </div>
       </div>
 

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NEBULIGHT — Auth</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Baloo+2&display=swap" rel="stylesheet">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Baloo+2&display=swap');
+
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Baloo 2', cursive;
+    background: url('space1.jpg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #cc5656;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10, 10, 20, 0.5);
+    z-index: 1;
+  }
+
+  .container {
+    position: relative;
+    z-index: 2;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    animation: fadeIn 2s ease-out;
+  }
+
+  h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    color: #d77edf;
+    text-shadow: 0 0 20px rgba(215, 126, 223, 0.8);
+  }
+
+  .card {
+    width: 380px;
+    max-width: calc(100% - 40px);
+    padding: 22px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    backdrop-filter: blur(6px);
+    text-align: center;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .tab {
+    padding: 8px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 700;
+    background: transparent;
+    color: #e8e9ad;
+  }
+
+  .tab.active {
+    background: linear-gradient(135deg, #ff6f91, #d77edf);
+    color: #1b1730;
+    box-shadow: 0 6px 16px rgba(215,126,223,0.18);
+  }
+
+  form {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  form.active {
+    display: flex;
+  }
+
+  input {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    background: rgba(255,255,255,0.1);
+    color: #eee;
+  }
+
+  button {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1.05rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #ff6f91, #f0efee);
+    color: #2a2a72;
+    cursor: pointer;
+    transition: 0.15s;
+  }
+
+  .error { color: #ffb4b4; font-size: .9rem; min-height:1.2em; }
+</style>
+</head>
+<body>
+  <div class="overlay"></div>
+
+  <div class="container">
+    <h1>NEBULIGHT</h1>
+
+    <div class="card">
+      <div class="tabs">
+        <div class="tab active" id="tab-signin">Sign In</div>
+        <div class="tab" id="tab-signup">Sign Up</div>
+      </div>
+
+      <!-- Sign In -->
+      <form id="signinForm" class="active">
+        <input id="si-username" type="text" placeholder="Username" required>
+        <input id="si-password" type="password" placeholder="Password" required>
+        <button type="submit">Log in</button>
+        <div id="si-msg" class="error"></div>
+      </form>
+
+      <!-- Sign Up -->
+      <form id="signupForm">
+        <input id="su-username" type="text" placeholder="Choose a username" required>
+        <input id="su-password" type="password" placeholder="Choose a password" required>
+        <input id="su-password2" type="password" placeholder="Confirm password" required>
+        <button type="submit">Create account</button>
+        <div id="su-msg" class="error"></div>
+      </form>
+    </div>
+  </div>
+
+<script>
+  const tabs = {
+    signin: document.getElementById('tab-signin'),
+    signup: document.getElementById('tab-signup')
+  };
+  const forms = {
+    signin: document.getElementById('signinForm'),
+    signup: document.getElementById('signupForm')
+  };
+  const msgs = {
+    si: document.getElementById('si-msg'),
+    su: document.getElementById('su-msg')
+  };
+
+  function setActive(name) {
+    if (name === 'signin') {
+      tabs.signin.classList.add('active');
+      tabs.signup.classList.remove('active');
+      forms.signin.classList.add('active');
+      forms.signup.classList.remove('active');
+      msgs.si.textContent = '';
+      msgs.su.textContent = '';
+    } else {
+      tabs.signup.classList.add('active');
+      tabs.signin.classList.remove('active');
+      forms.signup.classList.add('active');
+      forms.signin.classList.remove('active');
+      msgs.si.textContent = '';
+      msgs.su.textContent = '';
+    }
+  }
+
+  tabs.signin.addEventListener('click', () => setActive('signin'));
+  tabs.signup.addEventListener('click', () => setActive('signup'));
+
+  function loadUsers() {
+    const raw = localStorage.getItem('nebula_users');
+    return raw ? JSON.parse(raw) : [];
+  }
+  function saveUsers(users) {
+    localStorage.setItem('nebula_users', JSON.stringify(users));
+  }
+
+  // Demo account
+  (function ensureDemo(){
+    const users = loadUsers();
+    if (!users.find(u => u.username === 'guest')) {
+      users.push({ username: 'guest', password: '1234' });
+      saveUsers(users);
+    }
+  })();
+
+  // Sign In
+  forms.signin.addEventListener('submit', function(e){
+    e.preventDefault();
+    const u = document.getElementById('si-username').value.trim();
+    const p = document.getElementById('si-password').value;
+    msgs.si.textContent = '';
+
+    const users = loadUsers();
+    const user = users.find(x => x.username.toLowerCase() === u.toLowerCase());
+    if (!user || user.password !== p) {
+      msgs.si.textContent = 'Wrong username or password.';
+      return;
+    }
+
+    localStorage.setItem('nebula_user', JSON.stringify({ username: user.username, token: 'demo-token' }));
+    window.location.href = 'index.html';
+  });
+
+  // Sign Up
+  forms.signup.addEventListener('submit', function(e){
+    e.preventDefault();
+    const u = document.getElementById('su-username').value.trim();
+    const p1 = document.getElementById('su-password').value;
+    const p2 = document.getElementById('su-password2').value;
+    msgs.su.textContent = '';
+
+    if (u.length < 3) { msgs.su.textContent = 'Username too short.'; return; }
+    if (p1.length < 4) { msgs.su.textContent = 'Password too short.'; return; }
+    if (p1 !== p2) { msgs.su.textContent = 'Passwords do not match.'; return; }
+
+    const users = loadUsers();
+    if (users.find(x => x.username.toLowerCase() === u.toLowerCase())) {
+      msgs.su.textContent = 'Username already exists.'; return;
+    }
+
+    users.push({ username: u, password: p1 });
+    saveUsers(users);
+
+    // بعد الـ Sign Up يدخل على طول
+    localStorage.setItem('nebula_user', JSON.stringify({ username: u, token: 'demo-token' }));
+    window.location.href = 'index.html';
+  });
+</script>
+</body>
+</html>
